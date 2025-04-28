@@ -34,7 +34,7 @@ from langchain_openai import OpenAI
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.9, max_tokens=2000)
 
-# print(llm.invoke("Hello, world!").content)
+
 
 
 ##### try structured output
