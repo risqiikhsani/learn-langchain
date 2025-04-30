@@ -1,11 +1,11 @@
 # Indexing: a pipeline for ingesting data from a source and indexing it. This usually happens offline.
-# Load: First we need to load our data. This is done with Document Loaders.
-# Split: Text splitters break large Documents into smaller chunks. This is useful both for indexing data and passing it into a model, as large chunks are harder to search over and won't fit in a model's finite context window.
-# Store: We need somewhere to store and index our splits, so that they can be searched over later. This is often done using a VectorStore and Embeddings model.
+    # Load: First we need to load our data. This is done with Document Loaders.
+    # Split: Text splitters break large Documents into smaller chunks. This is useful both for indexing data and passing it into a model, as large chunks are harder to search over and won't fit in a model's finite context window.
+    # Store: We need somewhere to store and index our splits, so that they can be searched over later. This is often done using a VectorStore and Embeddings model.
 
 # Retrieval and generation: the actual RAG chain, which takes the user query at run time and retrieves the relevant data from the index, then passes that to the model.
-# Retrieve: Given a user input, relevant splits are retrieved from storage using a Retriever.
-# Generate: A ChatModel / LLM produces an answer using a prompt that includes both the question with the retrieved data
+    # Retrieve: Given a user input, relevant splits are retrieved from storage using a Retriever.
+    # Generate: A ChatModel / LLM produces an answer using a prompt that includes both the question with the retrieved data
 
 
 from app.concept.chatmodels.openai import llm
@@ -55,7 +55,27 @@ vector_store.add_documents(all_splits)
 retriever = vector_store.as_retriever()
 
 # Define prompt for question-answering
+
+# way 1 define prompt
+
 # prompt = hub.pull("rlm/rag-prompt")
+
+# way 2 define prompt
+
+# template = """Use the following pieces of context to answer the question at the end.
+# If you don't know the answer, just say that you don't know, don't try to make up an answer.
+# Use three sentences maximum and keep the answer as concise as possible.
+# Always say "thanks for asking!" at the end of the answer.
+
+# {context}
+
+# Question: {question}
+
+# Helpful Answer:"""
+# custom_rag_prompt = PromptTemplate.from_template(template)
+
+# way 3 define prompt
+
 prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="Use the following context to answer the question. If you don't know the answer, say you don't know.\n\nContext: {context}\n\nQuestion: {question}\nAnswer:"
